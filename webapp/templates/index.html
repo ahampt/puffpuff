@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+	<head>
+		<!--Import Google Icon Font-->
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!-- Compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	</head>
+
+	<body>
+		<!--Import jQuery before materialize.js-->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<!-- Compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+
+		<nav>
+			<div class="nav-wrapper">
+				<a href="#" class="brand-logo center">Puff, puff, pass 2.0</a>
+			</div>
+		</nav>
+
+		<div class="container center-align">
+			<h2>You up {{ name }}</h1>
+			<form method="post" action="/next">
+				<button class="btn-large waves-effect waves-light" type="submit">
+					Next
+					<i class="material-icons right">send</i>
+				</button>
+				<!-- Dropdown Trigger -->
+				<a href="#" class="btn-flat dropdown-button btn-large waves-effect waves-light" data-activates='dropdown1'>
+					Paid early<i class="material-icons right">more_vert</i>
+				</a>
+				<!-- Dropdown Structure -->
+				<ul id='dropdown1' class='dropdown-content'>
+					{% for user in users %}
+						<li><a href={{ "/credit?user=" + user }}>{{ user }}</a></li>
+					{% endfor %}
+				</ul>
+			</form>
+		</div>
+	</body>
+</html>
