@@ -1,19 +1,23 @@
 import random
 import string
+import constants
 
 import cherrypy
 
 import sqlite3
 
-from jinja2 import Environment, FileSystemLoader
-env = Environment(loader=FileSystemLoader('templates'))
+import os
+dir = os.path.dirname(__file__)
 
-db_name = 'puff_puff_db.sqlite'
+from jinja2 import Environment, FileSystemLoader
+env = Environment(loader=FileSystemLoader(os.path.join(dir, 'templates')))
+
+DB_FILE_PATH = os.path.join(dir, constants.RELATIVE_PATH_TO_DB_FILE)
 
 class Root(object):
 	@cherrypy.expose
 	def index(self):
-		conn = sqlite3.connect(db_name)
+		conn = sqlite3.connect(DB_FILE_PATH)
 		c = conn.cursor()
 
 		(name,) = c.execute('SELECT Name FROM Users Where IsCurrentlyPuffing = 1').fetchone()
@@ -32,7 +36,7 @@ class Root(object):
 
 	@cherrypy.expose
 	def credit(self, user):
-		conn = sqlite3.connect(db_name)
+		conn = sqlite3.connect(DB_FILE_PATH)
 		c = conn.cursor()
 		c.execute('UPDATE Users SET CountPaidEarly = CountPaidEarly + 1 WHERE Name = ?', (user,))
 		# Committing changes and closing the connection to the database file
@@ -42,7 +46,7 @@ class Root(object):
 		return
 
 def get_next_person_for_last_person():
-	conn = sqlite3.connect(db_name)
+	conn = sqlite3.connect(DB_FILE_PATH)
 	c = conn.cursor()
 
 	(count,) = c.execute('SELECT COUNT(*) FROM Users').fetchone()
