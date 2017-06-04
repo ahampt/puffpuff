@@ -78,4 +78,5 @@ def get_next_sort_index(sort_index, count):
 	return sort_index
 
 if __name__ == '__main__':
+	cherrypy.config.update(constants.CHERRYPY_CONFIG)
 	cherrypy.quickstart(Root())
