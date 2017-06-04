@@ -102,3 +102,6 @@ ENV/
 
 # SQLite
 *.sqlite
+
+# Local files that should not be versioned
+constants.py
