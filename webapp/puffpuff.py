@@ -21,7 +21,7 @@ class Root(object):
 		c = conn.cursor()
 
 		(name,) = c.execute('SELECT Name FROM Users Where IsCurrentlyPuffing = 1').fetchone()
-		users = (element for tupl in c.execute('SELECT Name FROM Users').fetchall() for element in tupl)	#Flatten the tuples using science
+		users = c.execute('SELECT Name,CountPaidEarly FROM Users').fetchall()
 
 		# Committing changes and closing the connection to the database file
 		conn.commit()
