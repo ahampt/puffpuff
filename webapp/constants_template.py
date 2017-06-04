@@ -6,6 +6,8 @@ RELATIVE_PATH_TO_DB_FILE = '../puff_puff_db.sqlite'
 CHERRYPY_CONFIG = {
 	'environment': 'production',
 	'log.screen': False,
+	'log.access_file': 'access.log',
+	'log.error_file': 'error.log',
 	'server.socket_host': '127.0.0.1',
 	'server.socket_port': 8080,
 }

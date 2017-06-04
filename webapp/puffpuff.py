@@ -39,6 +39,7 @@ class Root(object):
 		conn = sqlite3.connect(DB_FILE_PATH)
 		c = conn.cursor()
 		c.execute('UPDATE Users SET CountPaidEarly = CountPaidEarly + 1 WHERE Name = ?', (user,))
+		cherrypy.log('Credited {0} for paying early'.format(user))
 		# Committing changes and closing the connection to the database file
 		conn.commit()
 		conn.close()
@@ -51,20 +52,22 @@ def get_next_person_for_last_person():
 
 	(count,) = c.execute('SELECT COUNT(*) FROM Users').fetchone()
 
-	(last_user_id,last_sort_index) = c.execute('SELECT id,SortIndex FROM Users Where IsCurrentlyPuffing = 1').fetchone()
+	(last_user_id,last_user_name,last_sort_index) = c.execute('SELECT id,Name,SortIndex FROM Users Where IsCurrentlyPuffing = 1').fetchone()
 	
 	found = False
 	next_sort_index = last_sort_index
 	while(not found):
 		next_sort_index = get_next_sort_index(next_sort_index, count)
-		(next_user_id,next_count_paid_early) = c.execute('SELECT id,CountPaidEarly FROM Users Where SortIndex = ?', (next_sort_index,)).fetchone()
+		(next_user_id,next_user_name,next_count_paid_early) = c.execute('SELECT id,Name,CountPaidEarly FROM Users Where SortIndex = ?', (next_sort_index,)).fetchone()
 		if(next_count_paid_early == 0):
 			found = True
 		else:
 			c.execute('UPDATE Users SET CountPaidEarly = ? WHERE id = ?', (next_count_paid_early - 1, next_user_id))
 
+	# Update who should be up
 	c.execute('UPDATE Users SET IsCurrentlyPuffing = 0 WHERE id = ?', (last_user_id,))
 	c.execute('UPDATE Users SET IsCurrentlyPuffing = 1 WHERE id = ?', (next_user_id,))
+	cherrypy.log('Advanced from {0} to {1}'.format(last_user_name, next_user_name))
 
 	# Committing changes and closing the connection to the database file
 	conn.commit()
