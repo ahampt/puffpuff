@@ -21,7 +21,7 @@ class Root(object):
 		c = conn.cursor()
 
 		(name,) = c.execute('SELECT Name FROM Users Where IsCurrentlyPuffing = 1').fetchone()
-		users = c.execute('SELECT Name,CountPaidEarly FROM Users').fetchall()
+		users = c.execute('SELECT id,Name,CountPaidEarly FROM Users').fetchall()
 
 		# Committing changes and closing the connection to the database file
 		conn.commit()
@@ -35,11 +35,12 @@ class Root(object):
 		return
 
 	@cherrypy.expose
-	def credit(self, user):
+	def credit(self, user_id):
 		conn = sqlite3.connect(DB_FILE_PATH)
 		c = conn.cursor()
-		c.execute('UPDATE Users SET CountPaidEarly = CountPaidEarly + 1 WHERE Name = ?', (user,))
-		cherrypy.log('Credited {0} for paying early'.format(user))
+		c.execute('UPDATE Users SET CountPaidEarly = CountPaidEarly + 1 WHERE id = ?', (user_id,))
+		(name,) = c.execute('SELECT Name FROM Users Where id = ?', (user_id,)).fetchone()
+		cherrypy.log('Credited {0} for paying early'.format(name))
 		# Committing changes and closing the connection to the database file
 		conn.commit()
 		conn.close()
