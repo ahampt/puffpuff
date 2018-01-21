@@ -20,11 +20,14 @@
 
 		<nav>
 			<div class="nav-wrapper">
-				<a href="#" class="brand-logo center">Puff, puff, pass 2.0</a>
+				<a href="/" class="brand-logo center">Puff, puff, pass 2.0</a>
 			</div>
 		</nav>
 
 		<div class="container center-align">
+			{% if success %}
+				<h5>Updated!</h5>
+			{% endif %}
 			<h2>You up {{ name }}</h1>
 			<form method="post" action="/next">
 				<button class="btn-large waves-effect waves-light" type="submit">

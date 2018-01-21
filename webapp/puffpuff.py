@@ -16,7 +16,7 @@ DB_FILE_PATH = os.path.join(dir, constants.RELATIVE_PATH_TO_DB_FILE)
 
 class Root(object):
 	@cherrypy.expose
-	def index(self):
+	def index(self, success = "0"):
 		conn = sqlite3.connect(DB_FILE_PATH)
 		c = conn.cursor()
 
@@ -26,12 +26,12 @@ class Root(object):
 		# Committing changes and closing the connection to the database file
 		conn.commit()
 		conn.close()
-		return env.get_template('index.html').render(name=name, users=users)
+		return env.get_template('index.html').render(name=name, users=users, success=(success == "1"))
 
 	@cherrypy.expose
 	def next(self):
 		get_next_person_for_last_person()
-		raise cherrypy.HTTPRedirect("/")
+		raise cherrypy.HTTPRedirect("/?success=1")
 		return
 
 	@cherrypy.expose
